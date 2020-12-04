@@ -3,7 +3,7 @@ const fs = require('fs')
 const { exec } = require('child_process')
 
 /* ###### SETTINGS ###### */
-const inputFileName = 'sources.yml' // 'cards.yml'
+const inputFileName = 'cards.yml' // 'sources.yml'
 const outputFileName = inputFileName.split('.')[0]+'.csv'
 /* ###### SETTINGS END ###### */
 
@@ -12,12 +12,18 @@ const data = YAML.load('./INPUT/'+inputFileName)
 let output = ''
 
 Object.keys(data).forEach( item => {
-  output = output + '\"' + item + '\"' + ','
+  if(Object.keys(data[item]).some((item) => (item === 'indicator_id'))) {
+    output = output + '\"' + data[item]['indicator_id'] + '\"' + ',' + '\"' + item + '\"' + ','
+  } else {
+    output = output + '\"' + item + '\"' + ','
+  }
 
   Object.keys(data[item]).forEach( (dataField, key) => {
-    output = output + '\"' + data[item][dataField] + '\"'
-    if(Object.keys(data[item]).length -1 !== key){
-      output = output + ','
+    if(dataField !== 'indicator_id') {
+      output = output + '\"' + data[item][dataField] + '\"'
+      if(Object.keys(data[item]).length -1 !== key){
+        output = output + ','
+      }
     }
   })
 
