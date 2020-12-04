@@ -1,5 +1,7 @@
-const YAML = require('yamljs');
-const fs = require('fs');
+const YAML = require('yamljs')
+const fs = require('fs')
+const { exec } = require('child_process')
+
 
 /* ###### SETTINGS ###### */
 const inputFileName = 'dashboards.yml'
@@ -41,17 +43,39 @@ Object.keys(data).forEach( item => {
   output = output + '\n'
 });
 
+
+const sort = (fileName) => {
+  exec(`sort -o ./OUTPUT/${fileName} ./OUTPUT/${fileName}`, (err, stdout, stderr) => {
+    if (err) {
+      console.log(`error: ${err}`)
+      return;
+    }
+    if (stdout) {
+      console.log(`stdout: ${stdout}`);
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`);
+    }
+  });
+}
+
 fs.writeFile('./OUTPUT/'+outputFileName, output, function (err) {
-    if (err) return console.log(err);
-    console.log('file:'+outputFileName);
-});
+  if (err) return console.log(err)
+  console.log('file:'+outputFileName)
+})
+
+sort(outputFileName)
 
 fs.writeFile('./OUTPUT/'+outputFileNameDisabledFilters, outputDisabledFilters, function (err) {
-    if (err) return console.log(err);
-    console.log('file:'+outputFileNameDisabledFilters);
-});
+  if (err) return console.log(err)
+  console.log('file:'+outputFileNameDisabledFilters)
+})
+
+sort(outputFileNameDisabledFilters)
 
 fs.writeFile('./OUTPUT/'+outputFileNameDashboardSections, outputDashboardSections, function (err) {
-    if (err) return console.log(err);
-    console.log('file:'+outputFileNameDashboardSections);
-});
+  if (err) return console.log(err)
+  console.log('file:'+outputFileNameDashboardSections)
+})
+
+sort(outputFileNameDisabledFilters)

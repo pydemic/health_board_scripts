@@ -1,5 +1,6 @@
-const YAML = require('yamljs');
-const fs = require('fs');
+const YAML = require('yamljs')
+const fs = require('fs')
+const { exec } = require('child_process')
 
 /* ###### SETTINGS ###### */
 const inputFileName = 'sections.yml'
@@ -83,17 +84,41 @@ Object.keys(data).forEach( item => {
   output = output + line.join(',') + '\n'
 });
 
+const sort = (fileName) => {
+  exec(`sort -o ./OUTPUT/${fileName} ./OUTPUT/${fileName}`, (err, stdout, stderr) => {
+    if (err) {
+      console.log(`error: ${err}`)
+      return;
+    }
+    if (stdout) {
+      console.log(`stdout: ${stdout}`)
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`)
+    }
+  });
+}
+
 fs.writeFile('./OUTPUT/'+outputFileName, output, function (err) {
-    if (err) return console.log(err);
-    console.log('file:'+outputFileName);
-});
+  if (err) return console.log(err)
+  console.log('file:'+outputFileName)
+})
+
+sort(outputFileName)
 
 fs.writeFile('./OUTPUT/'+outputFileNameCards, outputCards, function (err) {
-    if (err) return console.log(err);
-    console.log('file:'+outputFileNameCards);
-});
+  if (err) return console.log(err)
+  console.log('file:'+outputFileNameCards)
+})
+
+sort(outputFileNameCards)
 
 fs.writeFile('./OUTPUT/'+outputFileNameFilters, outputFilters, function (err) {
-    if (err) return console.log(err);
-    console.log('file:'+outputFileNameFilters);
-});
+  if (err) return console.log(err)
+  console.log('file:'+outputFileNameFilters)
+})
+
+sort(outputFileNameFilters)
+
+
+
