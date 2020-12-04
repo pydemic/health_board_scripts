@@ -40,7 +40,9 @@ Object.keys(data).forEach( item => {
     }
   })
 
-  output = output + '\n'
+  const date = new Date()
+
+  output = output + ',\"' + date.toISOString() + '\",\"' + date.toISOString() + '\"\n'
 });
 
 
