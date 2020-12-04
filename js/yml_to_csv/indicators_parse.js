@@ -78,20 +78,19 @@ const sort = (fileName) => {
 fs.writeFile('./OUTPUT/'+outputFileName, output, function (err) {
   if (err) return console.log(err)
   console.log('file:'+outputFileName)
+  sort(outputFileName)
 })
 
-sort(outputFileName)
 
 fs.writeFile('./OUTPUT/'+outputFileNameSources, outputSources, function (err) {
   if (err) return console.log(err)
   console.log('file:'+outputFileNameSources)
+  sort(outputFileNameSources)
 })
 
-sort(outputFileNameSources)
 
 fs.writeFile('./OUTPUT/'+outputFileNameChildren, outputChildren, function (err) {
   if (err) return console.log(err)
   console.log('file:'+outputFileNameChildren)
+  sort(outputFileNameChildren)
 })
-
-sort(outputFileNameChildren)

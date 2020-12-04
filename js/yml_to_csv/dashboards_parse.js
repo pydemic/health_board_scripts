@@ -62,20 +62,18 @@ const sort = (fileName) => {
 fs.writeFile('./OUTPUT/'+outputFileName, output, function (err) {
   if (err) return console.log(err)
   console.log('file:'+outputFileName)
+  sort(outputFileName)
 })
-
-sort(outputFileName)
 
 fs.writeFile('./OUTPUT/'+outputFileNameDisabledFilters, outputDisabledFilters, function (err) {
   if (err) return console.log(err)
   console.log('file:'+outputFileNameDisabledFilters)
+  sort(outputFileNameDisabledFilters)
 })
 
-sort(outputFileNameDisabledFilters)
 
 fs.writeFile('./OUTPUT/'+outputFileNameDashboardSections, outputDashboardSections, function (err) {
   if (err) return console.log(err)
   console.log('file:'+outputFileNameDashboardSections)
+  sort(outputFileNameDisabledFilters)
 })
-
-sort(outputFileNameDisabledFilters)
