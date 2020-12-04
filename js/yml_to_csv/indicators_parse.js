@@ -13,7 +13,6 @@ const indicatorsKeys = [
   'formula', 
   'measurement_unit',
   'reference',
-  'reference',
   'sources',
   'children'
 ]
@@ -53,7 +52,9 @@ Object.keys(data).forEach( item => {
         }
       }
     } else {
-      line.push('')
+      if(dataField !== 'sources' && dataField !== 'children' ){
+        line.push('')
+      }
     }
   })
 
