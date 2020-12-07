@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  hbs_elixir:
+    image: pydemic/health_board_scripts:elixir
+    container_name: hbs_elixir
+    volumes:
+      - ../:/app
+      - mix:/root/.mix
+      - vscode:/root/.vscode-server-insiders
+
+volumes:
+  mix:
+    name: hbs_elixir_mix
+
+  vscode:
+    name: hbs_elixir_vscode

@@ -1,0 +1,2 @@
+defmodule HBS do
+end

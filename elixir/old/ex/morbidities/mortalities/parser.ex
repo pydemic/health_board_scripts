@@ -28,6 +28,7 @@ defmodule HealthBoard.Scripts.Morbidities.Mortalities.Parser do
 
     @input_dir
     |> File.ls!()
+    |> Enum.sort()
     |> inform_files()
     |> Stream.with_index(1)
     |> Task.async_stream(&parse_data_and_append_to_csv/1, timeout: :infinity)
@@ -77,7 +78,10 @@ defmodule HealthBoard.Scripts.Morbidities.Mortalities.Parser do
     |> Enum.reject(&is_nil/1)
     |> case do
       [] ->
-        if(required_or_optional == :required, do: raise("Columns not found"), else: {nil, type, required_or_optional})
+        if(required_or_optional == :required,
+          do: raise("Columns not found"),
+          else: {nil, type, required_or_optional}
+        )
 
       indexes ->
         {indexes, type, required_or_optional}
@@ -112,10 +116,17 @@ defmodule HealthBoard.Scripts.Morbidities.Mortalities.Parser do
       nil
     else
       case {Enum.at(line, index), type, required_or_optional} do
-        {"", _type, :required} -> raise "Data at column #{index} is empty"
-        {"N/A", _type, :required} -> raise "Data at column #{index} not defined"
-        {value, type, :required} -> parse_value(value, type) || raise "Data at column #{index} (#{value}) is invalid"
-        {value, type, _required_or_optional} -> parse_value(value, type)
+        {"", _type, :required} ->
+          raise "Data at column #{index} is empty"
+
+        {"N/A", _type, :required} ->
+          raise "Data at column #{index} not defined"
+
+        {value, type, :required} ->
+          parse_value(value, type) || raise "Data at column #{index} (#{value}) is invalid"
+
+        {value, type, _required_or_optional} ->
+          parse_value(value, type)
       end
     end
   end
@@ -182,6 +193,8 @@ defmodule HealthBoard.Scripts.Morbidities.Mortalities.Parser do
 
   defp sanitize_string(value) do
     if String.replace(value, "*", "") != "" do
+      value = String.replace(value, "NA", "")
+
       if String.contains?(value, ",") do
         ~s("#{value}")
       else

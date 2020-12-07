@@ -1,0 +1,23 @@
+{
+  "name": "HealthBoardScripts Elixir",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "hbs_elixir",
+  "workspaceFolder": "/app",
+  "shutdownAction": "none",
+  "extensions": [
+    "coenraads.bracket-pair-colorizer-2",
+    "davidanson.vscode-markdownlint",
+    "jakebecker.elixir-ls",
+    "mechatroner.rainbow-csv",
+    "mrorz.language-gettext",
+    "stkb.rewrap",
+    "sysoev.language-stylus",
+    "yzhang.markdown-all-in-one"
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "elixir.autoSpawnElixirSenseServers": true,
+    "elixir.useElixirSense": true,
+    "files.trimTrailingWhitespace": true
+  }
+}
