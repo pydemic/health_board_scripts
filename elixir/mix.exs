@@ -27,7 +27,8 @@ defmodule HBS.MixProject do
       {:hackney, "~> 1.16.0"},
       {:jason, "~> 1.2.2"},
       {:nimble_csv, "~> 1.1.0"},
-      {:tesla, "~> 1.3.3"}
+      {:tesla, "~> 1.3.3"},
+      {:yaml_elixir, "~> 2.5.0"}
     ]
   end
 end

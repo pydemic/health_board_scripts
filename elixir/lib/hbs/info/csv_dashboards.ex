@@ -1,10 +1,10 @@
-defmodule HBS.Dashboard.ParserYMLToCSV do
-  @dir File.cwd!()
+defmodule HBS.Info.CSVDashboards do
+  @dir Path.join(File.cwd!(), ".misc/sandbox")
 
-  @input_dir Path.join(@dir, "INPUT")
+  @input_dir Path.join(@dir, "input")
   @dashboards_file_path Path.join(@input_dir, "dashboards.yml")
 
-  @output_dir Path.join(@dir, "OUTPUT")
+  @output_dir Path.join(@dir, "output")
   @result_dir Path.join(@output_dir, "dashboards")
 
   @spec run :: :ok
@@ -24,9 +24,7 @@ defmodule HBS.Dashboard.ParserYMLToCSV do
     :ok
   end
 
-  defp parse_dashboard(
-         {dashboard_id, %{"name" => name, "description" => description, "groups" => groups}}
-       ) do
+  defp parse_dashboard({dashboard_id, %{"name" => name, "description" => description, "groups" => groups}}) do
     Enum.each(groups, &parse_group(dashboard_id, &1))
 
     date_now = DateTime.to_iso8601(DateTime.utc_now())
@@ -44,8 +42,7 @@ defmodule HBS.Dashboard.ParserYMLToCSV do
   end
 
   defp parse_group(dashboard_id, {group_id, group}) do
-    %{"index" => index, "name" => name, "description" => description, "sections" => sections} =
-      group
+    %{"index" => index, "name" => name, "description" => description, "sections" => sections} = group
 
     Enum.each(sections, &parse_section(group_id, &1))
 

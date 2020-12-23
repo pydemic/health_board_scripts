@@ -1,4 +1,4 @@
-defmodule HBS.DataPeriods.Uniqueness do
+defmodule HBS.Info.DataPeriodsUniqueness do
   require Logger
 
   @dir Path.join(File.cwd!(), ".misc/sandbox")
