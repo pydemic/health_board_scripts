@@ -27,6 +27,7 @@ defmodule HBS.Info.CSVSources do
       "description" => description,
       "link" => link,
       "update_rate" => update_rate,
+      "last_update_date" => last_update_date,
       "extraction_date" => extraction_date
     } = source
 
@@ -37,6 +38,7 @@ defmodule HBS.Info.CSVSources do
         safe_string(description),
         ~s("#{link}"),
         safe_string(update_rate),
+        safe_string(last_update_date),
         safe_string(extraction_date)
       ],
       ","
