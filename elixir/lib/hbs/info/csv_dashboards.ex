@@ -2,17 +2,17 @@ defmodule HBS.Info.CSVDashboards do
   @dir Path.join(File.cwd!(), ".misc/sandbox")
 
   @input_dir Path.join(@dir, "input")
-  @dashboards_file_path Path.join(@input_dir, "dashboards.yml")
+  @input_file_path Path.join(@input_dir, "dashboards.yml")
 
   @output_dir Path.join(@dir, "output")
   @result_dir Path.join(@output_dir, "dashboards")
 
-  @spec run :: :ok
-  def run do
+  @spec run(String.t()) :: :ok
+  def run(file_path \\ @input_file_path) do
     File.rm_rf!(@result_dir)
     File.mkdir_p!(@result_dir)
 
-    @dashboards_file_path
+    file_path
     |> YamlElixir.read_all_from_file!()
     |> List.first()
     |> Enum.map(&parse_dashboard/1)

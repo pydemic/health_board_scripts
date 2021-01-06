@@ -7,9 +7,9 @@ defmodule HBS.Info.CSVCards do
   @output_dir Path.join(@dir, "output")
   @output_file_path Path.join(@output_dir, "cards.csv")
 
-  @spec run :: :ok
-  def run do
-    @input_file_path
+  @spec run(String.t()) :: :ok
+  def run(file_path \\ @input_file_path) do
+    file_path
     |> YamlElixir.read_all_from_file!()
     |> List.first()
     |> Enum.map(&parse_object_to_line/1)
