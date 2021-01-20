@@ -6,6 +6,7 @@ services:
     container_name: hbs_elixir
     volumes:
       - ../:/app
+      - ../../../health_board_meta/data:/metadata
       - mix:/root/.mix
       - vscode:/root/.vscode-server-insiders
 
