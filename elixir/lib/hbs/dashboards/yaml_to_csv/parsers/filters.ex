@@ -1,13 +1,13 @@
-defmodule HBS.Dashboards.CSV.Filters do
-  import HBS.Dashboards.CSV.Helper, only: [raise_error: 3, where: 3]
-  alias HBS.Dashboards.CSV
+defmodule HBS.Dashboards.YAMLToCSV.Filters do
+  import HBS.Dashboards.YAMLToCSV.Helper, only: [where: 3]
+  alias HBS.Dashboards.YAMLToCSV
 
-  @spec parse(CSV.t()) :: CSV.t()
+  @spec parse(YAMLToCSV.t()) :: YAMLToCSV.t()
   def parse(%{input_data: input_data} = data) do
     case Map.get(input_data, "filters") do
       filters when is_list(filters) -> parse_filters(filters, data)
-      nil -> raise_error(:filters_not_found, data, keys: Map.keys(input_data))
-      filters -> raise_error(:filters_not_a_list, data, keys: filters)
+      nil -> raise YAMLToCSV.Exception.new(:filters_not_found, data, keys: Map.keys(input_data))
+      filters -> raise YAMLToCSV.Exception.new(:filters_not_a_list, data, keys: filters)
     end
   end
 
@@ -22,6 +22,6 @@ defmodule HBS.Dashboards.CSV.Filters do
   defp parse_filter({filter, index}, data) do
     data
     |> struct(input_data: filter)
-    |> where(index, &CSV.Filter.parse/1)
+    |> where(index, &YAMLToCSV.Filter.parse/1)
   end
 end

@@ -1,13 +1,13 @@
-defmodule HBS.Dashboards.CSV.Sources do
-  import HBS.Dashboards.CSV.Helper, only: [raise_error: 3, where: 3]
-  alias HBS.Dashboards.CSV
+defmodule HBS.Dashboards.YAMLToCSV.Sources do
+  import HBS.Dashboards.YAMLToCSV.Helper, only: [where: 3]
+  alias HBS.Dashboards.YAMLToCSV
 
-  @spec parse(CSV.t()) :: CSV.t()
+  @spec parse(YAMLToCSV.t()) :: YAMLToCSV.t()
   def parse(%{input_data: input_data} = data) do
     case Map.get(input_data, "sources") do
       sources when is_list(sources) -> parse_sources(sources, data)
-      nil -> raise_error(:sources_not_found, data, keys: Map.keys(input_data))
-      sources -> raise_error(:sources_not_a_list, data, keys: sources)
+      nil -> raise YAMLToCSV.Exception.new(:sources_not_found, data, keys: Map.keys(input_data))
+      sources -> raise YAMLToCSV.Exception.new(:sources_not_a_list, data, keys: sources)
     end
   end
 
@@ -22,6 +22,6 @@ defmodule HBS.Dashboards.CSV.Sources do
   defp parse_source({source, index}, data) do
     data
     |> struct(input_data: source)
-    |> where(index, &CSV.Source.parse/1)
+    |> where(index, &YAMLToCSV.Source.parse/1)
   end
 end

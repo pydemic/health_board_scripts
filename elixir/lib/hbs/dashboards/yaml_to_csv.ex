@@ -1,5 +1,5 @@
-defmodule HBS.Dashboards.CSV do
-  import __MODULE__.Helper, only: [raise_error: 2, raise_error: 3, where: 3]
+defmodule HBS.Dashboards.YAMLToCSV do
+  import __MODULE__.Helper, only: [where: 3]
 
   @dir File.cwd!()
 
@@ -15,7 +15,7 @@ defmodule HBS.Dashboards.CSV do
         }
 
   defstruct input_path: Path.join(@dir, ".misc/sandbox/input"),
-            output_path: Path.join(@dir, ".misc/sandbox/output"),
+            output_path: Path.join(@dir, ".misc/sandbox/output/dashboards"),
             where: [],
             input_data: %{},
             output_data: %{},
@@ -61,7 +61,7 @@ defmodule HBS.Dashboards.CSV do
         |> Enum.map(&Path.join(path, &1))
 
       {:error, posix} ->
-        raise_error(:ls_failed, struct(data, input_path: path), ls_error: posix)
+        raise __MODULE__.Exception.new(:ls_failed, struct(data, input_path: path), ls_error: posix)
     end
   end
 
@@ -74,7 +74,7 @@ defmodule HBS.Dashboards.CSV do
   defp parse_input_kind(%{input_data: input_data} = data) do
     case Map.pop(input_data, "kind") do
       {nil, _input_data} ->
-        raise_error(:kind_not_found, data, keys: Map.keys(input_data))
+        raise __MODULE__.Exception.new(:kind_not_found, data, keys: Map.keys(input_data))
 
       {kind, input_data} ->
         data = struct(data, input_data: input_data)
@@ -84,7 +84,7 @@ defmodule HBS.Dashboards.CSV do
           "filters" -> __MODULE__.Filters.parse(data)
           "indicators" -> __MODULE__.Indicators.parse(data)
           "sources" -> __MODULE__.Sources.parse(data)
-          kind -> raise_error(:invalid_kind, data, kind: kind)
+          kind -> raise __MODULE__.Exception.new(:invalid_kind, data, kind: kind)
         end
     end
   end
@@ -95,7 +95,7 @@ defmodule HBS.Dashboards.CSV do
 
   defp validate_requirement({get_keys, put_keys_list}, %{indexes: indexes} = data) do
     case get_in(indexes, get_keys) do
-      nil -> raise_error(:invalid_requirement_get_keys, data, get_keys: get_keys)
+      nil -> raise __MODULE__.Exception.new(:invalid_requirement_get_keys, data, get_keys: get_keys)
       index -> update_output_data_from_requirement(data, put_keys_list, index)
     end
   end
@@ -107,7 +107,14 @@ defmodule HBS.Dashboards.CSV do
           try do
             put_in_data(output_data, put_keys, index)
           rescue
-            error -> raise_error(:invalid_requirement_put_keys, data, put_keys: put_keys, exception: error)
+            error ->
+              reraise __MODULE__.Exception.new(
+                        :invalid_requirement_put_keys,
+                        data,
+                        put_keys: put_keys,
+                        error: error
+                      ),
+                      __STACKTRACE__
           end
         end)
     )
@@ -127,18 +134,24 @@ defmodule HBS.Dashboards.CSV do
           List.replace_at(data, key, put_in_data(child_data, keys, index))
       end
     else
-      data
+      index + 1
     end
   end
 
   defp write_files(%{output_data: output_data, output_path: output_path}) do
+    File.rm_rf!(output_path)
+    File.mkdir_p!(output_path)
+
     Enum.each(output_data, fn {filename, rows} ->
       output_path
       |> Path.join("#{filename}.csv")
       |> File.write(encode_rows(rows))
       |> case do
-        :ok -> :ok
-        {:error, posix} -> raise_error(:write_failed, write_error: posix, filename: filename, rows: rows)
+        :ok ->
+          :ok
+
+        {:error, posix} ->
+          raise __MODULE__.Exception.new(:write_failed, write_error: posix, filename: filename, rows: rows)
       end
     end)
   end

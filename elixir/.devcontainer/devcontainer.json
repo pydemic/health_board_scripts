@@ -9,15 +9,10 @@
     "davidanson.vscode-markdownlint",
     "jakebecker.elixir-ls",
     "mechatroner.rainbow-csv",
-    "mrorz.language-gettext",
     "stkb.rewrap",
-    "sysoev.language-stylus",
     "yzhang.markdown-all-in-one"
   ],
   "settings": {
-    "editor.formatOnSave": true,
-    "elixir.autoSpawnElixirSenseServers": true,
-    "elixir.useElixirSense": true,
-    "files.trimTrailingWhitespace": true
+    "elixirLS.dialyzerEnabled": true
   }
 }
