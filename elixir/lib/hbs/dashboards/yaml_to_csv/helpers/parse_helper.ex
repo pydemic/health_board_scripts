@@ -70,7 +70,8 @@ defmodule HBS.Dashboards.YAMLToCSV.ParseHelper do
   defp maybe_prepend_parent_sid(parent_sid, sid), do: "#{parent_sid}_#{sid}"
 
   @spec update_data(struct) :: YAMLToCSV.t()
-  def update_data(%{data: data, group: group, row: row}) do
+  def update_data(%{data: data, index: index, group: group, row: row}) do
+    row = [index + 1 | row]
     struct(data, output_data: Map.update(data.output_data, group, [row], &(&1 ++ [row])))
   end
 

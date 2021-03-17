@@ -17,11 +17,14 @@ defmodule HBS.Dashboards.YAMLToCSV.ParseHelper.RelationSID do
 
       {sid, row_index} ->
         get_keys = [to_group, sid]
-        put_keys = [group, index, row_index]
+        put_keys = [group, index, row_index + 1]
 
         struct(struct,
           data: struct(data, requirements: Map.update(requirements, get_keys, [put_keys], &[put_keys | &1]))
         )
+
+      _result ->
+        struct
     end
   end
 end

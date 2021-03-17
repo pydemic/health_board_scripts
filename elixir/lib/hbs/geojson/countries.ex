@@ -1,10 +1,10 @@
-defmodule HBS.GeoJSON.Cities do
+defmodule HBS.GeoJSON.Countries do
   require Logger
 
   @dir Path.join(File.cwd!(), ".misc/sandbox")
   @input_dir Path.join(@dir, "input")
   @output_dir Path.join(@dir, "output/geojson")
-  @geojson Path.join(@input_dir, "cities.geojson")
+  @geojson Path.join(@input_dir, "countries.geojson")
 
   @spec run :: :ok
   def run do
@@ -19,13 +19,13 @@ defmodule HBS.GeoJSON.Cities do
   end
 
   defp parse_feature(feature) do
-    {%{"regiao_saude.id" => location_id}, feature} = Map.pop!(feature, "properties")
-    Map.put(feature, "properties", %{"id" => location_id})
+    feature
+    |> Map.put("properties", %{"id" => 76})
   end
 
   defp write(features) do
     @output_dir
-    |> Path.join("cities.geojson")
+    |> Path.join("countries.geojson")
     |> File.write!(Jason.encode!(%{"type" => "FeatureCollection", "features" => features}))
   end
 end
